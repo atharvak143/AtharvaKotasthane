@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -393,10 +394,50 @@
         </div>
         </div>
       <div class="button-area">
-        <button type="submit" name="b1">
+        <button type="submit" name="b1" value="Submit">
           Submit <i class="fa fa-paper-plane"></i></button>
       </div>
     </form>
+    <?php
+// Database connection details
+$servername = "localhost";
+$username = "root";
+$password = "";
+$database = "portfolio"; // Your database name
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $database);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+if(isset($_POST['b1'])){
+    $name = $_POST['name'];
+    $email = $_POST['email'];
+    $phone = $_POST['phone'];
+    $message = $_POST['message'];
+
+    // Prepare and bind SQL statement
+    $stmt = $conn->prepare("INSERT INTO users ('Name', 'Email', 'Phone', 'Message') VALUES ('$name', '$email', '$phone', '$message')");
+    $stmt->bind_param( $name, $email, $phone, $message);
+
+    // Execute SQL statement
+    if ($stmt->execute()) {
+        echo "New record created successfully";
+    } else {
+        echo "Error: " . $stmt->error;
+    }
+
+    // Close statement
+    $stmt->close();
+}
+
+// Close connection
+$conn->close();
+?>
+
   </div>
   </div>
 </section>
@@ -476,6 +517,9 @@
 <!-- ==== ALL MAJOR JAVASCRIPT CDNS ENDS ==== -->
 
 <script src="./assets/js/script.js"></script>
+
+
+
 
 </body>
 </html>
